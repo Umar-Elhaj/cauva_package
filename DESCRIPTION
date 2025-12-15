@@ -1,0 +1,11 @@
+Package: cauva
+Type: Package
+Title: Cauchy Kovaleskaya's Theorem
+Version: 0.1.0
+Author: Ngapout Ngaleu
+Maintainer: The package maintainer <ngapoutomar237@gmail.com>
+Description: Cauva helps to apply Cauchy Kovaleskaya's Theorem.
+              This is to verify the existence and unicity of Alnalytic PDEs solutions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.3
