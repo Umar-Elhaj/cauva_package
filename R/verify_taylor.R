@@ -1,28 +1,28 @@
-#' Taylor series converges to f
+#' Test if Taylor series converges to f
 #' @param f Function to be checked (R function or an expression)
 #' @param point Point around which to check analyticity (named vector)
 #' @param variables Name of variables (default for dim 2)
 #' @param epsilon Neighborhood radius to test
 #' @param ordre Order of Taylor Series to be verified
 #' @return List with verified results
-#' @export
+#' @noRd
 
 verify_taylor <- function(f, point, variables, epsilon, ordre) {
-  valeur_exacte <- tryCatch(do.call(f, as.list(point)), error = function(e) NA)
+  valeur_exacte <- tryCatch(do.call(f, as.list(point)), error = function(e) NA) #f(point)
 
   if (is.na(valeur_exacte) || !is.finite(valeur_exacte)) {
     return(list(converge = FALSE, erreur = Inf))
   }
 
   # Test at multiple points in the neighborhood
-  n_points <- 10
+  n_points <- 10 #test for 10 neighbour values of point
   erreurs <- numeric(n_points)
 
   for (i in 1:n_points) {
-    point_test <- point + rnorm(length(point), 0, epsilon/3)
+    point_test <- point + rnorm(length(point), 0, epsilon/3) #creation of neighbour values
     names(point_test) <- names(point)
 
-    valeur_test <- tryCatch(do.call(f, as.list(point_test)), error = function(e) NA)
+    valeur_test <- tryCatch(do.call(f, as.list(point_test)), error = function(e) NA) #f(point_test)
 
     if (is.na(valeur_test) || !is.finite(valeur_test)) {
       return(list(converge = FALSE, erreur = Inf))
@@ -36,9 +36,9 @@ verify_taylor <- function(f, point, variables, epsilon, ordre) {
       point_h[var] <- point_h[var] + h
       derivee <- (do.call(f, as.list(point_h)) - valeur_exacte) / h
       approx_taylor <- approx_taylor + derivee * (point_test[var] - point[var])
-    }
+    } #T_n approximation
 
-    erreurs[i] <- abs(valeur_test - approx_taylor)
+    erreurs[i] <- abs(valeur_test - approx_taylor) #R_n = f(x)-T_n
   }
 
   erreur_moy <- mean(erreurs, na.rm = TRUE)

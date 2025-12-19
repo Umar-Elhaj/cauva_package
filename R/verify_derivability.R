@@ -1,13 +1,13 @@
-#' Differentiability of f
-#' @param f Function to be checked (R function or an expression)
-#' @param point Point around which to check analyticity (named vector)
+#' Test for Differentiability of f
+#' @param f Function to derive
+#' @param point Point around which we want to calculatethe partial derivatives
 #' @param variables Name of variables (default for dim 2)
 #' @param h step size for differentiation
 #' @return List with verified results
-#' @export
+#' @noRd
 
 verify_derivability <- function(f, point, variables, h = 0.0001) {
-  derivable <- TRUE
+  derivable <- TRUE #return intially true
   derivees <- list()
 
   for (var in variables) {
@@ -28,5 +28,5 @@ verify_derivability <- function(f, point, variables, h = 0.0001) {
     derivees[[var]] <- (val_plus - val_moins) / (2 * h)
   }
 
-  return(list(derivable = derivable, derivees = derivees))
+  return(list(derivable = derivable, derivees = derivees)) #if derivees exist then derivable remains True
 }

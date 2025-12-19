@@ -1,25 +1,20 @@
 #' Condition 3: Non-characteristic surface
 #' @param edp_coefficients PDEs coefficients to be verified (R function or an expression or constant)
-#' @param point_initial Point around which to check analyticity (named vector)
+#' @param point_initial Initial point to check if the surface is caracteristic or not
 #' @param variable_temps time variable
 #' @param variables_spatiales Name of variables (default for dim 2)
 #' @param epsilon Neighborhood radius to test
 #' @return List with verified results
 #' @export
 
-verify_non_characteristic_surface <- function(edp_coefficients,
-                                              point_initial,
-                                              variable_temps = "t",
-                                              variables_spatiales = c("x", "y"),
-                                              epsilon = 0.001) {
-
-  cat("=== Verification: Initial surface is non-characteristic ===\n\n")
+ck_surface <- function(edp_coefficients,
+                        point_initial,
+                        variable_temps = "t",
+                        variables_spatiales = c("x", "y"),
+                        epsilon = 0.001) {
 
   # For a surface t = t0 (constant), we must verify that
   # the coefficient of the highest time derivative is non-zero
-
-  # Example: for u_tt - c^2*u_xx = 0
-  # The coefficient A of u_tt must be != 0
 
   resultats <- list(
     non_caracteristique = FALSE,

@@ -1,7 +1,7 @@
-#' Solve Cauchy-Kovalevskaya theorem equation
-#' Condition 1:
 #' Analyticity checking function for the Cauchy-Kowalevski theorem
-#' Order 2: Equation of the form F(x, y, u, u_x, u_y, u_xx, u_xy, u_yy) = 0
+#' Theorem : A function f is analytic at a point x₀ if it can be represented by a power series that converges in a neighborhood of that point.
+#' Algorithm : ck_analyticity returns true verify continuity, singularity, derivability and taylor are true.
+#' NB : Equation should be of the form F(x, y, u, u_x, u_y, u_xx, u_xy, u_yy) = 0
 #' @param f Function to be checked (R function or an expression)
 #' @param point Point around which to check analyticity (named vector)
 #' @param variables Name of variables (default for dim 2)
@@ -11,17 +11,15 @@
 #' @export
 
 
-verify_analyticity_CK <- function(f, point, variables = c("x", "y", "u", "ux", "uy", "uxx", "uxy", "uyy"),
+ck_analyticity <- function(f, point, variables = c("x", "y", "u", "ux", "uy", "uxx", "uxy", "uyy"),
                                   epsilon = 0.001, ordre_taylor = 5) {
-
-  cat("=== ANALYTICITY VERIFICATION - CAUCHY-KOWALEVSKI THEOREM ===\n\n")
 
   resultats <- list(
     analytique = FALSE,
     tests_passes = c(),
     tests_echoues = c(),
     details = list()
-  )
+  ) #initialise result
 
   # Test 1: Continuity in a neighborhood
   cat("Test 1: Continuity in a neighborhood...\n")
@@ -85,7 +83,6 @@ verify_analyticity_CK <- function(f, point, variables = c("x", "y", "u", "ux", "
   cat("=== FINAL RESULT ===\n")
   if (resultats$analytique) {
     cat("[OK] The function is ANALYTIC at the given point\n")
-    cat("  The Cauchy-Kowalevski theorem applies!\n")
   } else {
     cat("[X] The function is NOT analytic\n")
     cat("  Failed tests:", paste(resultats$tests_echoues, collapse=", "), "\n")

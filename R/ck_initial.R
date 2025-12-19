@@ -1,4 +1,4 @@
-#' Initial conditions Phi and Psi are analytic
+#' Initial conditions Phi(u(t0,x)) and Psi(du/dt(t0,x)) are analytic
 #' @param phi Function to be checked (R function or an expression)
 #' @param psi du/dxi Function to be checked if PDE is of order 2 (R function or an expression)
 #' @param points_test Point around which to check analyticity (named vector)
@@ -8,21 +8,17 @@
 #' @return List with verified results
 #' @export
 
-verify_initial_conditions_CK <- function(phi, psi = NULL,
-                                         points_test,
-                                         variables_spatiales = c("x"),
-                                         epsilon = 0.001,
-                                         ordre_taylor = 3) {
-
-  cat("\n+=========================================================+\n")
-  cat("+        CONDITION 2: ANALYTIC INITIAL CONDITIONS        +\n")
-  cat("+==========================================================+\n\n")
+ck_initial <- function(phi, psi = NULL,
+                      points_test,
+                      variables_spatiales = c("x"),
+                      epsilon = 0.001,
+                      ordre_taylor = 3) {
 
   resultats <- list(
     phi_analytique = TRUE,
     psi_analytique = TRUE,
     details = list()
-  )
+  )#result intialy true
 
   # Verify phi(x)
   cat("Test of phi(x) [condition on u(t0, x)]...\n\n")
@@ -32,25 +28,25 @@ verify_initial_conditions_CK <- function(phi, psi = NULL,
     cat(sprintf("  Test point %d: %s\n", i, paste(names(point), "=", point, collapse=", ")))
 
     test_phi <- tryCatch({
-      verify_analyticity_CK(
+      ck_analyticity(
         f = phi,
         point = point,
         variables = variables_spatiales,
         epsilon = epsilon,
         ordre_taylor = ordre_taylor
-      )
+      ) #calling the function ck_analyticity to verify if test_phi is analytic
     }, error = function(e) {
       cat(sprintf(" [!] Error during test: %s\n", e$message))
-      return(list(est_analytique = FALSE, raison = paste("Error:", e$message)))
+      return(list(analytique = FALSE, raison = paste("Error:", e$message)))
     })
 
     resultats$details[[paste0("phi_point_", i)]] <- test_phi
 
     # Robust verification with NULL handling
-    if (is.null(test_phi) || is.null(test_phi$est_analytique)) {
+    if (is.null(test_phi) || is.null(test_phi$analytique)) {
       resultats$phi_analytique <- FALSE
       cat("    [X] Test of phi failed (invalid result)\n\n")
-    } else if (!test_phi$est_analytique) {
+    } else if (!test_phi$analytique) {
       resultats$phi_analytique <- FALSE
       cat("    [X] phi is NOT analytic at this point\n\n")
     } else {
@@ -67,7 +63,7 @@ verify_initial_conditions_CK <- function(phi, psi = NULL,
       cat(sprintf("  Test point %d: %s\n", i, paste(names(point), "=", point, collapse=", ")))
 
       test_psi <- tryCatch({
-        verify_analyticity_CK(
+        ck_analyticity(
           f = psi,
           point = point,
           variables = variables_spatiales,
@@ -76,16 +72,16 @@ verify_initial_conditions_CK <- function(phi, psi = NULL,
         )
       }, error = function(e) {
         cat(sprintf("    [!] Error during test: %s\n", e$message))
-        return(list(est_analytique = FALSE, raison = paste("Error:", e$message)))
+        return(list(analytique = FALSE, raison = paste("Error:", e$message)))
       })
 
       resultats$details[[paste0("psi_point_", i)]] <- test_psi
 
       # Robust verification with NULL handling
-      if (is.null(test_psi) || is.null(test_psi$est_analytique)) {
+      if (is.null(test_psi) || is.null(test_psi$analytique)) {
         resultats$psi_analytique <- FALSE
         cat("    [X] Test of psi failed (invalid result)\n\n")
-      } else if (!test_psi$est_analytique) {
+      } else if (!test_psi$analytique) {
         resultats$psi_analytique <- FALSE
         cat("    [X] psi is NOT analytic at this point\n\n")
       } else {

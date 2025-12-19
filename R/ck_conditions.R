@@ -13,7 +13,7 @@
 #' @return List with verified results
 #' @export
 
-verify_complete_CK_conditions <- function(
+ck_conditions <- function(
   edp_fonction,
   edp_coefficients,
   point_test_edp,
@@ -42,7 +42,7 @@ verify_complete_CK_conditions <- function(
   cat("+=========================================================+\n")
 
   resultats_globaux$condition_1 <- tryCatch({
-    verify_analyticity_CK(
+    ck_analyticity(
       f = edp_fonction,
       point = point_test_edp,
       variables = variables_edp,
@@ -51,7 +51,7 @@ verify_complete_CK_conditions <- function(
     )
   }, error = function(e) {
     cat(sprintf("[!] Error during verification: %s\n", e$message))
-    return(list(est_analytique = FALSE, raison = paste("Error:", e$message)))
+    return(list(analytique = FALSE, raison = paste("Error:", e$message)))
   })
 
   # CONDITION 2: Analytic initial conditions
@@ -60,7 +60,7 @@ verify_complete_CK_conditions <- function(
   cat("+=========================================================+\n")
 
   resultats_globaux$condition_2 <- tryCatch({
-    verify_initial_conditions_CK(
+    ck_initial(
       phi = phi,
       psi = psi,
       points_test = points_test_CI,
@@ -79,7 +79,7 @@ verify_complete_CK_conditions <- function(
   cat("+=========================================================+\n")
 
   resultats_globaux$condition_3 <- tryCatch({
-    verify_non_characteristic_surface(
+    ck_surface(
       edp_coefficients = edp_coefficients,
       point_initial = points_test_CI[[1]],
       variable_temps = variable_temps,
@@ -99,8 +99,8 @@ verify_complete_CK_conditions <- function(
   # ROBUST extraction of results with default values
   cond1_ok <- FALSE
   if (!is.null(resultats_globaux$condition_1) &&
-      !is.null(resultats_globaux$condition_1$est_analytique)) {
-    cond1_ok <- resultats_globaux$condition_1$est_analytique
+      !is.null(resultats_globaux$condition_1$analytique)) {
+    cond1_ok <- resultats_globaux$condition_1$analytique
   }
 
   cond2_ok <- FALSE
